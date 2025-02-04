@@ -1,0 +1,118 @@
+/* Style général du body */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+}
+
+/* Style du titre */
+h1 {
+    text-align: center;
+    color: #4CAF50;
+    margin-top: 20px;
+}
+
+/* Style des liens (ajoutés côte à côte) */
+a {
+    display: inline-block;
+    text-align: center;
+    color: #fff;
+    background-color: #007BFF;
+    padding: 12px 20px;
+    text-decoration: none;
+    font-size: 16px;
+    border-radius: 4px;
+    margin: 10px;
+    transition: background-color 0.3s ease;
+    width: 48%;
+    box-sizing: border-box;
+}
+
+a:hover {
+    background-color: #0056b3;
+}
+
+/* Style des tables */
+table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+}
+
+th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+td {
+    background-color: #f9f9f9;
+}
+
+/* Style des formulaires dans la table */
+form {
+    display: inline;
+    margin: 0;
+    transition: 0.5s;
+}
+
+/* Style des boutons de suppression */
+form input[type="submit"] {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+form input[type="submit"]:hover {
+    background-color: #d32f2f;
+    scale: 105%;
+}
+
+/* Style pour les erreurs de connexion */
+.error {
+    color: red;
+    font-weight: bold;
+}
+
+/* Style du formulaire */
+form {
+    width: 100%;
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Style du bouton de soumission (si besoin) */
+form input[type="submit"] {
+    padding: 14px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+
+form input[type="submit"]:hover {
+    background-color: #45a049;
+}

@@ -1,6 +1,7 @@
 <html>
 <head>
     <title>Ajout d'un élève</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <h1>Ajout d'un élève</h1>
@@ -15,31 +16,37 @@ try {
     exit();
 }
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['Nom'], $_POST['Prénom'], $_POST['promotion'])) {
-    $nom = $_POST['Nom'];
-    $prenom = $_POST['Prénom'];
-    $promotion = $_POST['promotion'];
+    $nom = htmlspecialchars(preg_replace('/[^a-zA-ZáéíóúñÁÉÍÓÚÑ]/u', "", $_POST['Nom']));
+    $prenom = htmlspecialchars(preg_replace('/[^a-zA-ZáéíóúñÁÉÍÓÚÑ]/u', "", $_POST['Prénom']));
+    $promotion = htmlspecialchars($_POST['promotion']);
 
-    $sql = "SELECT id_formation FROM formations WHERE nom_formation = :promotion";
-    $stmt = $connexion->prepare($sql);
-    $stmt->bindParam(':promotion', $promotion, PDO::PARAM_STR);
-    $stmt->execute();
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    if (empty($nom) && empty($prenom) && empty($promotion)) {
+        $sql = "SELECT id_formation FROM formations WHERE nom_formation = :promotion";
+        $stmt = $connexion->prepare($sql);
+        $stmt->bindParam(':promotion', $promotion, PDO::PARAM_STR);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($row) {
-        $id_formation = $row['id_formation'];
-        $insert_sql = "INSERT INTO etudiants (nom, prenom, id_formation) VALUES (:nom, :prenom, :id_formation)";
-        $insert_stmt = $connexion->prepare($insert_sql);
-        $insert_stmt->bindParam(':nom', $nom, PDO::PARAM_STR);
-        $insert_stmt->bindParam(':prenom', $prenom, PDO::PARAM_STR);
-        $insert_stmt->bindParam(':id_formation', $id_formation, PDO::PARAM_INT);
+        if ($row) {
+            $id_formation = $row['id_formation'];
+            $insert_sql = "INSERT INTO etudiants (nom, prenom, id_formation) VALUES (:nom, :prenom, :id_formation)";
+            $insert_stmt = $connexion->prepare($insert_sql);
+            $insert_stmt->bindParam(':nom', $nom, PDO::PARAM_STR);
+            $insert_stmt->bindParam(':prenom', $prenom, PDO::PARAM_STR);
+            $insert_stmt->bindParam(':id_formation', $id_formation, PDO::PARAM_INT);
 
-        if ($insert_stmt->execute()) {
-            echo "L'élève a été ajouté avec succès!";
+            if ($insert_stmt->execute()) {
+                echo "L'élève " . $_POST['Prénom'] . " été ajouté avec succès!";
+            } else {
+                echo "Une erreur est survenue lors de l'ajout de l'élève.";
+            }
         } else {
-            echo "Une erreur est survenue lors de l'ajout de l'élève.";
+            echo "La promotion sélectionnée est invalide.";
         }
     } else {
-        echo "La promotion sélectionnée est invalide.";
+        echo '<script language="Javascript">
+        alert ("Saisissez un nom valide !" )
+        </script>';
     }
 }
 ?>

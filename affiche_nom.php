@@ -1,3 +1,8 @@
+<html>
+<head>
+    <link rel="stylesheet" href="public/affiche.css">
+</head>
+
 <?php
 if (isset($_POST['promotion'])) {
     $promotion = $_POST['promotion'];
@@ -22,3 +27,4 @@ if (isset($_POST['promotion'])) {
     }
 }
 ?>
+</html>
