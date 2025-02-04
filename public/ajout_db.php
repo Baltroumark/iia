@@ -5,7 +5,6 @@
 </head>
 <body>
 <h1>Ajout d'un élève</h1>
-<a href="index.php">Liste des Promotions</a>
 <?php
 require '../connect_db.php';
 $dsn = "mysql:dbname=" . BASE . ";host=" . SERVER;
@@ -15,19 +14,25 @@ try {
     printf("Échec de la connexion : %s\n", $e->getMessage());
     exit();
 }
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['Nom'], $_POST['Prénom'], $_POST['promotion'])) {
-    $nom = htmlspecialchars(preg_replace('/[^a-zA-ZáéíóúñÁÉÍÓÚÑ]/u', "", $_POST['Nom']));
-    $prenom = htmlspecialchars(preg_replace('/[^a-zA-ZáéíóúñÁÉÍÓÚÑ]/u', "", $_POST['Prénom']));
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['nom'], $_POST['prenom'])) {
+    $nom = htmlspecialchars(preg_replace('/[^a-zA-ZáéíóúñÁÉÍÓÚÑ]/u', "", $_POST['nom']));
+    $prenom = htmlspecialchars(preg_replace('/[^a-zA-ZáéíóúñÁÉÍÓÚÑ]/u', "", $_POST['prenom']));
     $promotion = htmlspecialchars($_POST['promotion']);
 
-    if (empty($nom) && empty($prenom) && empty($promotion)) {
+    if (!empty($nom) && !empty($prenom) && !empty($promotion)) {
         $sql = "SELECT id_formation FROM formations WHERE nom_formation = :promotion";
         $stmt = $connexion->prepare($sql);
         $stmt->bindParam(':promotion', $promotion, PDO::PARAM_STR);
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($row) {
+        if ($row && empty($_POST['promotion'])) {
+            $insert_sql = "INSERT INTO etudiants (nom, prenom, id_formation) VALUES (:nom, :prenom, :id_formation)";
+            $insert_stmt = $connexion->prepare($insert_sql);
+            $insert_stmt->bindParam(':nom', $nom, PDO::PARAM_STR);
+            $insert_stmt->bindParam(':prenom', $prenom, PDO::PARAM_STR);
+            $insert_stmt->bindParam('0', $promotion, PDO::PARAM_STR);
+        } elseif ($row) {
             $id_formation = $row['id_formation'];
             $insert_sql = "INSERT INTO etudiants (nom, prenom, id_formation) VALUES (:nom, :prenom, :id_formation)";
             $insert_stmt = $connexion->prepare($insert_sql);
@@ -36,12 +41,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['Nom'], $_POST['Prénom
             $insert_stmt->bindParam(':id_formation', $id_formation, PDO::PARAM_INT);
 
             if ($insert_stmt->execute()) {
-                echo "L'élève " . $_POST['Prénom'] . " été ajouté avec succès!";
+                echo "L'élève a été ajouté avec succès!";
             } else {
                 echo "Une erreur est survenue lors de l'ajout de l'élève.";
             }
-        } else {
-            echo "La promotion sélectionnée est invalide.";
         }
     } else {
         echo '<script language="Javascript">
@@ -51,12 +54,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['Nom'], $_POST['Prénom
 }
 ?>
 <form method="post">
-    <input type="text" id="Nom" name="Nom" placeholder="Nom de l'élève" required>
+    <a href="index.php">Liste des Promotions</a>
+    <input type="text" id="nom" name="nom" placeholder="Nom de l'élève" required>
     <br>
-    <input type="text" id="Prénom" name="Prénom" placeholder="Prénom de l'élève" required>
+    <input type="text" id="prenom" name="prenom" placeholder="Prénom de l'élève" required>
     <br>
-    <select id="promotion" name="promotion" required>
-        <option value="">Sélectionnez la promotion</option>
+    <select id="promotion" name="promotion">
+        <option value="Sans formation">Sélectionnez la promotion</option>
         <?php
         $sql = "SELECT * from formations ORDER BY nom_formation DESC";
         foreach ($connexion->query($sql) as $row) {

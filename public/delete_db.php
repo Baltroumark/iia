@@ -41,11 +41,10 @@ try {
     $stmt = $connexion->prepare($sql);
     $stmt->execute();
     echo "<table>";
-    echo "<tr><th>Formation</th><th>ID Formation</th><th>Nom</th><th>Prénom</th><th>Action</th></tr>";
+    echo "<tr><th>Formation</th><th>Nom</th><th>Prénom</th><th>Action</th></tr>";
     foreach ($stmt as $row) {
         echo "<tr>";
         echo "<td>" . htmlspecialchars($row['nom_formation']) . "</td>";
-        echo "<td>" . htmlspecialchars($row['id_formation']) . "</td>";
         echo "<td>" . htmlspecialchars($row['nom']) . "</td>";
         echo "<td>" . htmlspecialchars($row['prenom']) . "</td>";
         echo "<td>
@@ -60,14 +59,13 @@ try {
 
     // Table of formations
     echo "<br><table>";
-    echo "<tr><th>Formation</th><th>ID Formation</th><th>Action</th></tr>";
+    echo "<tr><th>Formation</th><th>Action</th></tr>";
     $sql = "SELECT id_formation, nom_formation FROM formations";
     $stmt = $connexion->prepare($sql);
     $stmt->execute();
     foreach ($stmt as $row) {
         echo "<tr>";
         echo "<td>" . htmlspecialchars($row['nom_formation']) . "</td>";
-        echo "<td>" . htmlspecialchars($row['id_formation']) . "</td>";
         echo "<td>
                 <form method='POST'>
                     <input type='hidden' name='id_formation' value='".htmlspecialchars($row['id_formation'])."'>
