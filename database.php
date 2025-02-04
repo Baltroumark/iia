@@ -1,10 +1,5 @@
 <?php
-define('USER', "root");
-define('PASSWD', "");
-define('SERVER', "localhost");
-define('BASE', "iia");
-$dsn = "mysql:dbname=" . BASE . ";host=" . SERVER;
-
+require 'connect_db.php';
 try {
     $connexion = new PDO($dsn, USER, PASSWD);
 } catch (PDOException $e) {
@@ -13,9 +8,7 @@ try {
 }
 
 $sql = "SELECT * from formations ORDER BY nom_formation DESC";
-if (!$connexion->query($sql)) {
-    echo "Pb d'accès aux promotions";
-} else {
+if ($connexion->query($sql)) {
     echo "<select name='promotion'>";
     echo "<option value='0' " . (empty($_POST['promotion']) ? 'selected' : '') . ">Selectionner une promotion</option>";
     foreach ($connexion->query($sql) as $row) {

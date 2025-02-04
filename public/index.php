@@ -6,6 +6,7 @@
 <h1>Liste des promotions</h1>
 <form method="post" >
     <?php
+    echo '<a href="ajout_db.php">Ajout élève</a><br>';
     require '../database.php';
     ?>
     <input type="submit" value="Filtrer">
